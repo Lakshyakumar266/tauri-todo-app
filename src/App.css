@@ -1,0 +1,1038 @@
+/* ==========================================================
+   Border-Free Aesthetic Pinkish Desktop Widget
+   ========================================================== */
+
+:root {
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Delicious Pink Palette */
+  --bg-gradient: linear-gradient(155deg, #fff0f4 0%, #ffdbe4 45%, #ffc4d4 100%);
+  
+  --primary-rose: #ff476d;
+  --primary-rose-hover: #e0184b;
+  --primary-rose-glow: rgba(255, 71, 109, 0.35);
+  
+  --accent-blush: #ff758f;
+  --accent-soft: #ffe3eb;
+  
+  /* Text & Contrast (Rich deep berry/plum for perfect readability) */
+  --text-main: #3b1122;
+  --text-muted: #854a61;
+  --text-subtle: #aa7287;
+  --text-white: #ffffff;
+  
+  /* Borderless Floating Surfaces */
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-bg-hover: rgba(255, 255, 255, 0.88);
+  --card-shadow: 0 4px 16px rgba(220, 60, 100, 0.08);
+  --card-shadow-hover: 0 8px 24px rgba(220, 60, 100, 0.14);
+  
+  /* Priority Badges (Zero Border) */
+  --prio-high-bg: rgba(255, 71, 109, 0.15);
+  --prio-high-color: #d91448;
+  --prio-med-bg: rgba(251, 133, 0, 0.15);
+  --prio-med-color: #c25e00;
+  --prio-low-bg: rgba(16, 185, 129, 0.15);
+  --prio-low-color: #047857;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================================================
+   Widget Container (Curved Edges, Zero Outer Borders)
+   ========================================================== */
+.widget-app {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  border-radius: 28px;
+  background: var(--bg-gradient);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: none;
+  outline: none;
+  user-select: none;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+
+/* Ambient Radial Glow Blooms */
+.widget-app::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 140, 170, 0.5) 0%, rgba(255, 180, 205, 0) 70%);
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.widget-app::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 90, 130, 0.35) 0%, rgba(255, 180, 205, 0) 70%);
+  filter: blur(25px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==========================================================
+   Widget Header (Draggable, Curved Top Edges)
+   ========================================================== */
+.widget-header {
+  height: 48px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+  z-index: 10;
+  cursor: grab;
+  -webkit-app-region: drag;
+}
+
+.widget-header:active {
+  cursor: grabbing;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-app-region: drag;
+}
+
+.brand-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--primary-rose);
+  box-shadow: 0 0 10px var(--primary-rose);
+  animation: pulse-dot 2.2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 14px var(--primary-rose); }
+}
+
+.brand-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.2px;
+}
+
+.brand-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  background: rgba(255, 71, 109, 0.16);
+  color: var(--primary-rose);
+  border-radius: 999px;
+}
+
+/* Header Buttons (Zero Border) */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  -webkit-app-region: no-drag;
+}
+
+.btn-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  font-size: 12px;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 6px rgba(220, 60, 100, 0.08);
+}
+
+.btn-icon:hover {
+  background: #ffffff;
+  color: var(--text-main);
+  transform: translateY(-1px) scale(1.06);
+  box-shadow: 0 4px 12px rgba(220, 60, 100, 0.18);
+}
+
+.btn-icon:active {
+  transform: scale(0.92);
+}
+
+.btn-icon.active-pin {
+  background: var(--primary-rose);
+  color: #ffffff;
+  box-shadow: 0 0 14px var(--primary-rose-glow);
+}
+
+.btn-icon.close:hover {
+  background: #ff476d;
+  color: #ffffff;
+}
+
+/* ==========================================================
+   Widget Body
+   ========================================================== */
+.widget-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  gap: 10px;
+  overflow: hidden;
+  z-index: 5;
+}
+
+/* Progress Card (Zero Border) */
+.progress-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  border: none;
+  border-radius: 18px;
+  padding: 12px 15px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-date {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.progress-percent {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-rose);
+}
+
+.progress-track {
+  width: 100%;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff758f 0%, #ff476d 50%, #e0184b 100%);
+  border-radius: 999px;
+  transition: width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 10px var(--primary-rose-glow);
+}
+
+.progress-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.progress-quote {
+  font-weight: 500;
+}
+
+/* Filter Segmented Control (Zero Border) */
+.filter-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  padding: 3px;
+  border-radius: 14px;
+  border: none;
+  gap: 3px;
+  -webkit-app-region: no-drag;
+}
+
+.filter-tab {
+  flex: 1;
+  padding: 6px 0;
+  border: none;
+  background: transparent;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  outline: none;
+}
+
+.filter-tab:hover {
+  color: var(--text-main);
+}
+
+.filter-tab.active {
+  background: #ffffff;
+  color: var(--primary-rose);
+  box-shadow: 0 2px 8px rgba(220, 60, 100, 0.12);
+  font-weight: 700;
+}
+
+.filter-count {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: rgba(255, 71, 109, 0.12);
+  color: var(--primary-rose);
+}
+
+/* ==========================================================
+   Quick Add Form (Zero Border)
+   ========================================================== */
+.quick-add-form {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  border: none;
+  border-radius: 18px;
+  padding: 8px 10px 8px 14px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.2s ease;
+  -webkit-app-region: no-drag;
+}
+
+.quick-add-form:focus-within {
+  box-shadow: 0 8px 24px rgba(255, 71, 109, 0.18);
+  background: #ffffff;
+}
+
+.add-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.add-input::placeholder {
+  color: var(--text-subtle);
+  font-weight: 400;
+}
+
+.btn-add {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ff476d, #e0184b);
+  border: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 3px 10px rgba(224, 24, 75, 0.35);
+  font-size: 16px;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.btn-add:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 5px 14px rgba(224, 24, 75, 0.45);
+}
+
+.btn-add:active {
+  transform: scale(0.92);
+}
+
+.btn-add:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Meta Options Row (Zero Border) */
+.add-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  gap: 8px;
+}
+
+.meta-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.meta-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.meta-select {
+  border: none;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 8px;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-main);
+  outline: none;
+  cursor: pointer;
+}
+
+/* ==========================================================
+   Scrollable Todo List (Zero Border)
+   ========================================================== */
+.todo-list-container {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+}
+
+.todo-list-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.todo-list-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.todo-list-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 120, 160, 0.4);
+  border-radius: 10px;
+}
+
+.todo-list-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 71, 109, 0.65);
+}
+
+/* Todo Item Card (Zero Border) */
+.todo-item {
+  background: var(--card-bg);
+  backdrop-filter: blur(14px);
+  border: none;
+  border-radius: 16px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.todo-item:hover {
+  background: var(--card-bg-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.todo-item.completed {
+  opacity: 0.65;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.todo-item.completed:hover {
+  opacity: 0.9;
+}
+
+/* Heart/Check Circle Button (Zero Border) */
+.todo-checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 140, 170, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding: 0;
+  outline: none;
+}
+
+.todo-checkbox:hover {
+  background: rgba(255, 71, 109, 0.3);
+  transform: scale(1.12);
+}
+
+.todo-checkbox.checked {
+  background: var(--primary-rose);
+  box-shadow: 0 2px 8px var(--primary-rose-glow);
+}
+
+.checkbox-heart {
+  font-size: 11px;
+  color: #ffffff;
+  line-height: 1;
+}
+
+/* Todo Content */
+.todo-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+  cursor: default;
+}
+
+.todo-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  word-break: break-word;
+  transition: all 0.2s ease;
+}
+
+.todo-item.completed .todo-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.todo-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.prio-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1.5px 6px;
+  border-radius: 6px;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.prio-badge.high {
+  background: var(--prio-high-bg);
+  color: var(--prio-high-color);
+}
+
+.prio-badge.medium {
+  background: var(--prio-med-bg);
+  color: var(--prio-med-color);
+}
+
+.prio-badge.low {
+  background: var(--prio-low-bg);
+  color: var(--prio-low-color);
+}
+
+.category-badge {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Todo Actions (Zero Border) */
+.todo-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.todo-item:hover .todo-actions {
+  opacity: 1;
+}
+
+.btn-action {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.btn-action:hover {
+  background: #ffffff;
+  color: var(--text-main);
+  transform: scale(1.08);
+}
+
+.btn-action.delete:hover {
+  background: #ff476d;
+  color: #ffffff;
+}
+
+/* Inline Edit Mode (Zero Border) */
+.edit-form {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.edit-input {
+  flex: 1;
+  background: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 13px;
+  color: var(--text-main);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-rose);
+}
+
+.btn-save {
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--primary-rose);
+  color: #ffffff;
+  border: none;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+.btn-cancel {
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text-muted);
+  border: none;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Empty State */
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 38px;
+  animation: float-icon 3s infinite ease-in-out;
+}
+
+@keyframes float-icon {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(4deg); }
+}
+
+.empty-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.empty-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  max-width: 220px;
+  line-height: 1.4;
+}
+
+/* ==========================================================
+   Widget Footer
+   ========================================================== */
+.widget-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  -webkit-app-region: no-drag;
+}
+
+.btn-clear {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.btn-clear:hover {
+  color: var(--primary-rose);
+  background: rgba(255, 71, 109, 0.12);
+}
+
+/* ==========================================================
+   Widget Navigation (Tasks vs Pomodoro)
+   ========================================================== */
+.widget-nav {
+  display: flex;
+  margin: 6px 16px 0 16px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  padding: 3px;
+  border-radius: 16px;
+  gap: 4px;
+  z-index: 6;
+  -webkit-app-region: no-drag;
+}
+
+.nav-tab {
+  flex: 1;
+  padding: 6px 0;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 13px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  outline: none;
+}
+
+.nav-tab:hover {
+  color: var(--text-main);
+}
+
+.nav-tab.active {
+  background: #ffffff;
+  color: var(--primary-rose);
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(220, 60, 100, 0.12);
+}
+
+/* ==========================================================
+   Pomodoro & Stopwatch View
+   ========================================================== */
+.pomodoro-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px 14px 16px;
+  gap: 10px;
+  z-index: 5;
+  overflow-y: auto;
+  -webkit-app-region: no-drag;
+}
+
+/* Mode Selection Pills (Focus, Short Break, Long Break, Stopwatch) */
+.pomo-mode-tabs {
+  display: flex;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  padding: 3px;
+  border-radius: 14px;
+  gap: 2px;
+}
+
+.pomo-mode-btn {
+  flex: 1;
+  padding: 5px 0;
+  border: none;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  text-align: center;
+}
+
+.pomo-mode-btn:hover {
+  color: var(--text-main);
+}
+
+.pomo-mode-btn.active {
+  background: #ffffff;
+  color: var(--primary-rose);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(220, 60, 100, 0.1);
+}
+
+/* Circular Timer Dial Card */
+.timer-card {
+  width: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  padding: 16px 12px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.timer-card.running {
+  box-shadow: 0 10px 28px rgba(255, 71, 109, 0.2);
+}
+
+.timer-dial {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.timer-bg-circle {
+  fill: none;
+  stroke: rgba(255, 180, 200, 0.35);
+  stroke-width: 8;
+}
+
+.timer-progress-circle {
+  fill: none;
+  stroke: url(#pomoGrad);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.timer-digits-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-digits {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.timer-status-badge {
+  margin-top: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--primary-rose);
+  background: rgba(255, 71, 109, 0.12);
+  padding: 2px 9px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* Active Task Link */
+.timer-task-selector {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.timer-task-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.timer-task-select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 12px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-main);
+  outline: none;
+  cursor: pointer;
+}
+
+/* Timer Control Buttons */
+.timer-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.btn-timer-primary {
+  padding: 10px 28px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff476d, #e0184b);
+  border: none;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(224, 24, 75, 0.35);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  outline: none;
+}
+
+.btn-timer-primary:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(224, 24, 75, 0.45);
+}
+
+.btn-timer-primary:active {
+  transform: scale(0.93);
+}
+
+.btn-timer-secondary {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.btn-timer-secondary:hover {
+  background: #ffffff;
+  color: var(--text-main);
+  transform: scale(1.08);
+}
+
+/* Pomodoro Stats & Badges */
+.pomo-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+}
+
+.pomo-count {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pomo-quote {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
