@@ -79,12 +79,16 @@ fn current_timestamp() -> String {
 }
 
 /* ==========================================================
-   Todo Commands
-   ========================================================== */
+Todo Commands
+========================================================== */
 
 #[tauri::command]
 fn get_todos(state: State<AppState>) -> Vec<TodoItem> {
-    state.todos.lock().unwrap_or_else(|e| e.into_inner()).clone()
+    state
+        .todos
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .clone()
 }
 
 #[tauri::command]
@@ -192,12 +196,14 @@ fn clear_completed(state: State<AppState>) -> Result<Vec<TodoItem>, String> {
 }
 
 /* ==========================================================
-   Window Controls
-   ========================================================== */
+Window Controls
+========================================================== */
 
 #[tauri::command]
 fn toggle_always_on_top(window: WebviewWindow, pinned: bool) -> Result<bool, String> {
-    window.set_always_on_top(pinned).map_err(|e| e.to_string())?;
+    window
+        .set_always_on_top(pinned)
+        .map_err(|e| e.to_string())?;
     Ok(pinned)
 }
 
@@ -212,12 +218,16 @@ fn close_window(window: WebviewWindow) -> Result<(), String> {
 }
 
 /* ==========================================================
-   Pomodoro & Stopwatch Commands
-   ========================================================== */
+Pomodoro & Stopwatch Commands
+========================================================== */
 
 #[tauri::command]
 fn get_pomodoro_state(state: State<AppState>) -> PomodoroState {
-    state.pomodoro.lock().unwrap_or_else(|e| e.into_inner()).clone()
+    state
+        .pomodoro
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .clone()
 }
 
 #[tauri::command]
